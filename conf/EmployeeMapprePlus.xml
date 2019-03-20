@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MyBatis.dao.EmployeeMapperPlus">
+    <!--Employee getEmpById(Integer id);-->
+    <resultMap id="MySimpleEmp" type="MyBatis.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+    </resultMap>
+    <select id="getEmpById" resultMap="MySimpleEmp">
+        select * from employee where id = #{id}
+    </select>
+
+    <!--<resultMap id="MyDifEmp" type="MyBatis.bean.Employee">-->
+        <!--<id column="id" property="id"/>-->
+        <!--<result column="last_name" property="lastName"/>-->
+        <!--<result column="gender" property="gender"/>-->
+        <!--<result column="email" property="email"/>-->
+        <!--<result column="did" property="dept.id"/>-->
+        <!--<result column="dept_name" property="dept.departmentName"/>-->
+    <!--</resultMap>-->
+    <!--&lt;!&ndash;Employee getEmpAndDept(Integer id);&ndash;&gt;-->
+    <!--<select id="getEmpAndDept" resultMap="MyDifEmp">-->
+        <!--select e.id id,e.last_name last_name,e.gender gender,e.email email,d.id did,d.dept_name dept_name from employee e,dept d where e.d_id = d.id and e.id = #{id}-->
+    <!--</select>-->
+    <resultMap id="MyDifEmp2" type="MyBatis.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <association property="dept" javaType="MyBatis.bean.Department">
+            <id column="did" property="id"/>
+            <result column="dept_name" property="departmentName"/>
+        </association>
+    </resultMap>
+    <select id="getEmpAndDept" resultMap="MyDifEmp2">
+        select e.id id,e.last_name last_name,e.gender gender,e.email email,d.id did,d.dept_name dept_name from employee e,dept d where e.d_id = d.id and e.id = #{id}
+    </select>
+
+    <!--Employee getEmpByIdStep(Integer id);-->
+    <resultMap id="MyEmpByStep" type="MyBatis.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <association property="dept" select="MyBatis.dao.DepartmentMapper.getDeptById" column="d_id">
+
+        </association>
+    </resultMap>
+    <select id="getEmpByIdStep" resultMap="MyEmpByStep">
+        select * from employee where id = #{id}
+    </select>
+
+    <!--    List<Employee> getEmpsByDeptId(Integer deptId);-->
+    <select id="getEmpsByDeptId" resultType="MyBatis.bean.Employee">
+        select * from employee where d_id = #{deptId}
+    </select>
+    
+    
+    <resultMap id="MyEmpDis" type="MyBatis.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <discriminator javaType="String" column="gender">
+            <case value="0" resultType="MyBatis.bean.Employee">
+                <association property="dept" select="MyBatis.dao.DepartmentMapper.getDeptById" column="d_id"></association>
+            </case>
+            <case value="1" resultType="MyBatis.bean.Employee">
+                <id column="id" property="id"/>
+                <result column="last_name" property="lastName"/>
+                <result column="gender" property="gender"/>
+                <result column="last_name" property="email"/>
+            </case>
+        </discriminator>
+
+    </resultMap>
+</mapper>

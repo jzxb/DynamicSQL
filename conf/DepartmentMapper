@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MyBatis.dao.DepartmentMapper">
+    <!--Department getDeptById(Integer id);-->
+    <select id="getDeptById" resultType="MyBatis.bean.Department">
+        select id,dept_name departmentName from dept where id = #{id}
+    </select>
+
+    <!--Department getDeptByIdPlus(Integer id);-->
+    <resultMap id="MyDept" type="MyBatis.bean.Department">
+        <id column="did" property="id"/>
+        <result column="dept_name" property="departmentName"/>
+        <collection property="emps" ofType="MyBatis.bean.Employee">
+            <id column="eid" property="id"/>
+            <result column="last_name" property="lastName"/>
+            <result column="gender" property="gender"/>
+            <result column="email" property="email"/>
+        </collection>
+    </resultMap>
+    <select id="getDeptByIdPlus" resultMap="MyDept">
+        select d.id did,d.dept_name dept_name,e.id eid,e.last_name last_name,e.gender gender,e.email email from dept d left join employee e on d.id = e.d_id where d.id = #{id}
+    </select>
+
+    <!--    Department getDeptByIdStep(Integer id);-->
+    <resultMap id="MyDeptStep" type="MyBatis.bean.Department">
+        <id column="id" property="id"/>
+        <result column="departmentName" property="departmentName"/>
+        <collection property="emps" select="MyBatis.dao.EmployeeMapperPlus.getEmpsByDeptId" column="{deptId = id}"></collection>
+    </resultMap>
+    <select id="getDeptByIdStep" resultMap="MyDeptStep">
+        select id,dept_name departmentName from dept where id = #{id}
+    </select>
+</mapper>

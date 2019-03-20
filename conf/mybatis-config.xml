@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="jdbcTypeForNull" value="NULL"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="MyBatis.bean.Employee" alias="emp"></typeAlias>
+        <!--<package name="org.lhx.MyBatis.bean"></package>-->
+    </typeAliases>
+    <environments default="development">
+        <environment id="test">
+            <transactionManager type=""></transactionManager>
+            <dataSource type=""></dataSource>
+        </environment>
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/mybatis?serverTimezone=UTC"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql"></property>
+        <property name="Oracle" value="oracle"></property>
+        <property name="SQL Server" value="sqlserver"></property>
+    </databaseIdProvider>
+    <mappers>
+        <mapper resource="EmployeeMapper.xml"/>
+        <mapper resource="EmployeeMapprePlus.xml"/>
+        <mapper resource="DepartmentMapper"/>
+        <mapper resource="EmployeeMapperDynamicSQL"/>
+    </mappers>
+</configuration>
